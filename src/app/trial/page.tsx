@@ -1,13 +1,32 @@
 "use client";
 
-import React from 'react'
+import React, { useState } from 'react'
 import { FaCamera, FaPaperPlane } from 'react-icons/fa'
 
 function Trial() {
+    const [showOptions, setShowOptions] = useState(false)
+
+    const handleCameraClick = () => {
+      setShowOptions(!showOptions)
+    }
+  
+    const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0]
+      if (file) {
+        console.log("Uploaded file:", file)
+      }
+      setShowOptions(false)
+    }
+  
+    const handleCapture = () => {
+      console.log("Capture picture")
+      setShowOptions(false)
+    }
+
   return (
     <div className="flex flex-col h-screen bg-gray-100">
       {/* Header */}
-      <div className="bg-black text-white text-lg font-semibold p-4 text-center shadow-md">
+      <div className=" text-white text-lg font-semibold p-4 text-center shadow-md" style={{ backgroundColor: '#123524' }}>
         Sustainable Reuse AI Chatbot
       </div>
 
@@ -17,10 +36,30 @@ function Trial() {
       </div>
 
       {/* Input Section */}
-      <div className="p-4 bg-black flex items-center gap-3 border-t shadow-md">
-        <button className="p-2 bg-gray-200 rounded-full">
-          <FaCamera className="text-gray-600" />
-        </button>
+      <div className="p-4  flex items-center gap-3  shadow-md" style={{ backgroundColor: '#123524' }}>
+        <div className="relative">
+          <button className="p-2 bg-gray-200 rounded-full" onClick={handleCameraClick}>
+            <FaCamera className="text-gray-600" />
+          </button>
+
+          {showOptions && (
+            <div className="absolute flex flex-col space-y-2 top-[-130px] left-0 bg-slate-900 rounded-lg pd-20 pr-20 pl-20">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleUpload}
+                className="hidden" // Hide the default file input
+                id="file-upload"
+              />
+              <label htmlFor="file-upload" className="cursor-pointer p-2  m-3 bg-black rounded-lg">
+                Upload
+              </label>
+              <button onClick={handleCapture} className="p-2 bg-black rounded-lg">
+                Capture
+              </button>
+            </div>
+          )}
+        </div>
 
         <input
           type="text"
@@ -37,7 +76,7 @@ function Trial() {
           <option value="retro">Retro</option>
         </select>
 
-        <button  className="p-3 bg-green-500 text-white rounded-full">
+        <button  className="p-3 text-white rounded-full">
           <FaPaperPlane />
         </button>
       </div>
