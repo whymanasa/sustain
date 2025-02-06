@@ -53,13 +53,13 @@ function Trial() {
   return (
     <div className="flex flex-col h-screen bg-gray-100">
       {/* Header */}
-      <div className="text-white text-lg font-semibold p-4 text-center shadow-md" style={{ backgroundColor: "#123524" }}>
+      <div className="black text-lg font-semibold p-4 text-center shadow-md" style={{ backgroundColor: "#123524" }}>
         Sustainable Reuse AI Chatbot
       </div>
 
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ backgroundColor: "#5A6C57" }}>
-        {response ? <div className="bg-white p-4 rounded">{response}</div> : "messages"}
+        {response ? <div className="bg-white text-black p-4 rounded">{response}</div> : "messages"}
       </div>
 
       {/* Input Section */}
@@ -87,10 +87,10 @@ function Trial() {
           placeholder="Describe your object..."
           value={object}
           onChange={(e) => setObject(e.target.value)}
-          className="flex-1 p-2 border rounded-lg outline-none"
+          className="text-black flex-1 p-2 border rounded-lg outline-none"
         />
 
-        <select className="p-2 border rounded-lg" value={style} onChange={(e) => setStyle(e.target.value)}>
+        <select className=" text-black p-2 border rounded-lg" value={style} onChange={(e) => setStyle(e.target.value)}>
           <option value="">Style (Optional)</option>
           <option value="simple">Simple</option>
           <option value="maximalistic">Maximalistic</option>
