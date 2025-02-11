@@ -13,7 +13,6 @@ export async function POST(req: Request) {
     if (image) {
       const buffer = Buffer.from(await image.arrayBuffer()); // Convert to Buffer
 
-      console.log("Sending image to Hugging Face...");
 
       const visionResponse = await fetch(
         "https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-base",
@@ -35,7 +34,6 @@ export async function POST(req: Request) {
       const visionData = await visionResponse.json();
       detectedObject = visionData?.[0]?.generated_text?.trim() || "unknown object"; // ✅ Extract caption
 
-      console.log("ViT-GPT2 Detected Object:", detectedObject);
     }
 
     if (!detectedObject || detectedObject === "unknown object") {
@@ -43,7 +41,7 @@ export async function POST(req: Request) {
     }
 
     // ✅ Generate upcycling ideas using the detected object
-    const aiPrompt = `You are an expert in sustainable upcycling and creative reuse ideas. Your goal is to suggest **three simple, beginner-friendly, and eco-friendly ways** to repurpose an old ${detectedObject}. Ideas should be in a ${style || "versatile"} style while remaining sustainable. 
+    const aiPrompt = `You are an expert in sustainable upcycling and creative reuse ideas. Your goal is to suggest **three simple, beginner-friendly, and eco-friendly ways** to repurpose an old ${detectedObject}. Ideas should be in a ${style} style while remaining sustainable. 
 
     ## Instructions:
     - Keep the ideas **short, clear, and easy to make**.
@@ -61,7 +59,7 @@ export async function POST(req: Request) {
     The goal is to leave the user feeling **motivated**, **encouraged**, and **ready to ask more questions** or request further suggestions.
     `;
     console.log("Sending prompt to AI model...");
-    const aiResponse = await fetch("https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3", {
+    const aiResponse = await fetch("https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
