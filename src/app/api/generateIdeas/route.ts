@@ -8,15 +8,23 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Please provide an object name." }, { status: 400 });
     }
 
-    const prompt = `You are an expert in sustainable upcycling and creative reuse ideas. Your goal is to provide **eco-friendly, upcycled, and waste-reducing solutions** for old objects. Ensure your responses are **structured, detailed, and easy to follow**.
+    const prompt = `You are an expert in sustainable upcycling and creative reuse ideas. Your goal is to suggest **three simple, beginner-friendly, and eco-friendly ways** to repurpose an old ${object}. Ideas should be in a ${style || "versatile"} style while remaining sustainable. 
 
-    ## Task:
-    Suggest **at least three creative and practical reuse ideas** for an old ${object}. Ideas should be in a ${style || "versatile"} style while remaining sustainable. Ensure each idea includes:
-    1. **Idea Name** (Catchy and descriptive)
-    2. **Purpose** (Why it’s useful and how it benefits the environment)
-    3. keep them short
-    
-    Provide ideas that are **simple, practical, and environmentally responsible**.`;
+## Instructions:
+- Keep the ideas **short, clear, and easy to make**.
+- Each idea should have a **catchy title** and a **one-line description** explaining how to reuse the item.
+- Avoid complex DIY methods—focus on **minimal materials and simple steps**.
+
+## Example Output Format:
+1. **Jar Lantern** – Add fairy lights inside for a night lamp.  
+2. **DIY Pencil Holder** – Decorate and store pens/pencils.  
+3. **Herb Garden** – Fill with soil and grow small herbs.
+
+### Important:
+After suggesting the three ideas, **end your response** with a **positive and encouraging tone**.
+
+The goal is to leave the user feeling **motivated**, **encouraged**, and **ready to ask more questions** or request further suggestions.
+`;
     
 
     const response = await fetch("https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3", {
