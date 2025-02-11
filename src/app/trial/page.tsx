@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import { FaCamera, FaPaperPlane } from "react-icons/fa";
 
@@ -7,6 +6,8 @@ function Trial() {
   const [showOptions, setShowOptions] = useState(false);
   const [object, setObject] = useState("");
   const [style, setStyle] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -15,9 +16,9 @@ function Trial() {
   };
 
   const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      console.log("Uploaded file:", file);
+    if (event.target.files && event.target.files[0]) {
+      setFile(event.target.files[0]);
+      setPreview(URL.createObjectURL(event.target.files[0])); // Show preview
     }
     setShowOptions(false);
   };
@@ -28,27 +29,33 @@ function Trial() {
   };
 
   const handleSend = async () => {
-    if (!object.trim()) return;
-  
+    if (!object.trim() && !file) return; // Ensure at least text or image is provided
+
     setLoading(true);
     setResponse("");
-  
+
+    const formData = new FormData();
+    if (file) {
+      formData.append("image", file);
+    } else {
+      formData.append("object", object);
+    }
+    formData.append("style", style);
+
     try {
-      const res = await fetch("/api/generateIdeas", { // ✅ Correct API path
+      const res = await fetch("/api/generateIdeas", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ object, style }),
+        body: formData,
       });
-  
+
       const data = await res.json();
       setResponse(data.ideas || "No ideas generated.");
     } catch {
       setResponse("Error fetching ideas.");
     }
-  
+
     setLoading(false);
   };
-  
 
   return (
     <div className="flex flex-col h-screen bg-gray-100">

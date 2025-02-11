@@ -2,57 +2,83 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { object, style } = await req.json();
+    const formData = await req.formData();
+    const image = formData.get("image") as Blob | null;
+    const textInput = formData.get("object") as string | null;
+    const style = formData.get("style") as string || "versatile";
 
-    if (!object) {
-      return NextResponse.json({ message: "Please provide an object name." }, { status: 400 });
+    let detectedObject = textInput || ""; // Use text if provided
+
+    // ✅ If an image is uploaded, send it as binary to Hugging Face
+    if (image) {
+      const buffer = Buffer.from(await image.arrayBuffer()); // Convert to Buffer
+
+      console.log("Sending image to Hugging Face...");
+
+      const visionResponse = await fetch(
+        "https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-base",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${process.env.HUGGINGIMAGE_API_KEY}`, // ✅ Use Hugging Face key
+          },
+          body: buffer, // ✅ Send raw binary image
+        }
+      );
+
+      if (!visionResponse.ok) {
+        const errorText = await visionResponse.text();
+        console.error("Hugging Face API Error:", errorText);
+        return NextResponse.json({ message: "Error processing image", error: errorText }, { status: 500 });
+      }
+
+      const visionData = await visionResponse.json();
+      detectedObject = visionData?.[0]?.generated_text?.trim() || "unknown object"; // ✅ Extract caption
+
+      console.log("ViT-GPT2 Detected Object:", detectedObject);
     }
 
-    const prompt = `You are an expert in sustainable upcycling and creative reuse ideas. Your goal is to suggest **three simple, beginner-friendly, and eco-friendly ways** to repurpose an old ${object}. Ideas should be in a ${style || "versatile"} style while remaining sustainable. 
+    if (!detectedObject || detectedObject === "unknown object") {
+      return NextResponse.json({ message: "Couldn't identify the object. Try again with a clearer image or provide text input." }, { status: 400 });
+    }
 
-## Instructions:
-- Keep the ideas **short, clear, and easy to make**.
-- Each idea should have a **catchy title** and a **one-line description** explaining how to reuse the item.
-- Avoid complex DIY methods—focus on **minimal materials and simple steps**.
+    // ✅ Generate upcycling ideas using the detected object
+    const aiPrompt = `You are an expert in sustainable upcycling and creative reuse ideas. Your goal is to suggest **three simple, beginner-friendly, and eco-friendly ways** to repurpose an old ${detectedObject}. Ideas should be in a ${style || "versatile"} style while remaining sustainable. 
 
-## Example Output Format:
-1. **Jar Lantern** – Add fairy lights inside for a night lamp.  
-2. **DIY Pencil Holder** – Decorate and store pens/pencils.  
-3. **Herb Garden** – Fill with soil and grow small herbs.
-
-### Important:
-After suggesting the three ideas, **end your response** with a **positive and encouraging tone**.
-
-The goal is to leave the user feeling **motivated**, **encouraged**, and **ready to ask more questions** or request further suggestions.
-`;
+    ## Instructions:
+    - Keep the ideas **short, clear, and easy to make**.
+    - Each idea should have a **catchy title** and a **one-line description** explaining how to reuse the item.
+    - Avoid complex DIY methods—focus on **minimal materials and simple steps**.
     
-
-    const response = await fetch("https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3", {
+    ## Example Output Format:
+    1. **Jar Lantern** – Add fairy lights inside for a night lamp.  
+    2. **DIY Pencil Holder** – Decorate and store pens/pencils.  
+    3. **Herb Garden** – Fill with soil and grow small herbs.
+    
+    ### Important:
+    After suggesting the three ideas, **end your response** with a **positive and encouraging tone**.
+    
+    The goal is to leave the user feeling **motivated**, **encouraged**, and **ready to ask more questions** or request further suggestions.
+    `;
+    console.log("Sending prompt to AI model...");
+    const aiResponse = await fetch("https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        inputs: prompt,
-        parameters: {
-          max_new_tokens: 1000, // More tokens to generate a complete response
-          temperature: 0.7, // More creative responses
-          top_p: 0.9, // Better diversity in output
-        },
-      }),
+      body: JSON.stringify({ inputs: aiPrompt, parameters: { max_new_tokens: 2000, temperature: 0.7, top_p: 0.9 } }),
     });
 
-    if (!response.ok) {
-      return NextResponse.json({ message: "AI request failed", error: await response.text() }, { status: 500 });
+    if (!aiResponse.ok) {
+      return NextResponse.json({ message: "AI request failed", error: await aiResponse.text() }, { status: 500 });
     }
 
-    const data = await response.json();
-    return NextResponse.json({ ideas: data[0]?.generated_text || "No ideas generated." });
+    const aiData = await aiResponse.json();
+    return NextResponse.json({ detectedObject, ideas: aiData[0]?.generated_text || "No ideas found." });
+
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-    return NextResponse.json({ message: "Server error", error: errorMessage }, { status: 500 });
+    console.error("Server error:", error);
+    return NextResponse.json({ message: "Server error", error: error instanceof Error ? error.message : "Unknown error" }, { status: 500 });
   }
 }
-
-
