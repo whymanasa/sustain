@@ -132,7 +132,7 @@ const Trial: React.FC = () => {
   return (
     <div className="flex flex-col h-screen bg-[#E8F0E3] text-[#3A4A40]">
       <header className="bg-[#5A7052] text-[#FFFFFF] text-xl font-bold p-4 sm:p-6 text-center shadow-lg rounded-b-2xl">
-        Sustainable Reuse AI Chatbot
+        Neko - The AI
       </header>
 
       <main className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6 bg-[#C9DABF] rounded-2xl shadow-inner m-2 sm:m-4">
@@ -150,101 +150,101 @@ const Trial: React.FC = () => {
           </div>
         ))}
         {queries.length === 0 && (
-          <p className="text-[#5A7052] text-center text-lg italic">No messages yet. Start a conversation!</p>
+          <p className="text-[#5A7052] text-center text-lg italic">/⁠ᐠ⁠｡⁠ꞈ⁠｡⁠ᐟ⁠\ No messages yet. Start a conversation!</p>
         )}
         <div ref={chatEndRef} />
       </main>
 
-      {loading && (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#B08BBB] text-white p-4 rounded-xl shadow-lg z-50 animate-fade-in-out">
-          {loadingQuote}
-        </div>
-      )}
+        {loading && (
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#B08BBB] text-white p-4 rounded-xl shadow-lg z-50 animate-fade-in-out">
+            {loadingQuote}
+          </div>
+        )}
 
-      {preview && (
-        <div className="flex justify-center items-center p-2 sm:p-4">
-          <img
-            src={preview || "/placeholder.svg"}
-            alt="Uploaded Preview"
-            className="max-w-[80%] sm:max-w-xs max-h-20 rounded-2xl shadow-md"
-          />
-          <button className="ml-2 p-1 bg-[#5A7052] text-white rounded-full" onClick={removeImage}>
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-      )}
+        {preview && (
+          <div className="flex justify-center items-center p-2 sm:p-4">
+            <img
+              src={preview || "/placeholder.svg"}
+              alt="Uploaded Preview"
+              className="max-w-[80%] sm:max-w-xs max-h-20 rounded-2xl shadow-md"
+            />
+            <button className="ml-2 p-1 bg-[#5A7052] text-white rounded-full" onClick={removeImage}>
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        )}
 
-      <footer className="p-3 sm:p-6 flex flex-wrap items-center gap-2 sm:gap-4 bg-[#8FA880] shadow-lg rounded-t-2xl m-2 sm:m-4 mt-0">
-        <div className="relative">
-          <button
-            onClick={handleCameraClick}
-            className="rounded-full p-2 sm:p-3 bg-[#5A7052] text-white hover:bg-[#4B5945] transition-colors duration-300"
-          >
-            <Camera className="h-4 w-4 sm:h-5 sm:w-5" />
-          </button>
+        <footer className="p-3 sm:p-6 flex flex-wrap items-center gap-2 sm:gap-4 bg-[#8FA880] shadow-lg rounded-t-2xl m-2 sm:m-4 mt-0">
+          <div className="relative">
+            <button
+              onClick={handleCameraClick}
+              className="rounded-full p-2 sm:p-3 bg-[#5A7052] text-white hover:bg-[#4B5945] transition-colors duration-300"
+            >
+              <Camera className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
 
-          {showOptions && (
-            <div className="absolute flex flex-col space-y-2 bottom-full left-0 mb-2 bg-[#C9DABF] p-2 sm:p-3 rounded-xl shadow-lg">
-              <input type="file" accept="image/*" onChange={handleUpload} className="hidden" id="file-upload" />
-              <label
-                htmlFor="file-upload"
-                className="cursor-pointer p-2 bg-[#8FA880] text-white rounded-md hover:bg-[#7A9470] transition-colors duration-300 text-sm sm:text-base"
-              >
-                <Upload className="h-4 w-4 inline-block mr-2" /> Upload
-              </label>
-              <button
-                onClick={handleCapture}
-                className="p-2 bg-[#5A7052] text-white rounded-md hover:bg-[#4B5945] transition-colors duration-300 text-sm sm:text-base"
-              >
-                <Camera className="h-4 w-4 inline-block mr-2" /> Capture
-              </button>
-            </div>
-          )}
-        </div>
-
-        <div className="flex-1 flex items-center">
-          <input
-            type="text"
-            placeholder={!isFollowUp ? "Describe your object..." : "Ask a follow-up question..."}
-            value={isFollowUp ? followUp : object}
-            onChange={(e) => (isFollowUp ? setFollowUp(e.target.value) : setObject(e.target.value))}
-            className="flex-1 p-2 sm:p-3 border rounded-l-xl sm:rounded-l-xl bg-[#E8F0E3] text-[#3A4A40] placeholder-[#8FA880] focus:outline-none focus:ring-2 focus:ring-[#5A7052] transition-all duration-300 text-sm sm:text-base"
-          />
-          <button
-            onClick={handleSend}
-            disabled={loading}
-            className=" sm:rounded-r-xl p-3 rounded-r-xl sm:p-4 bg-[#5A7052] text-white hover:bg-[#4B5945] transition-colors duration-300"
-          >
-            {loading ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-            ) : (
-              <PaperPlane className="h-4 w-4" />
+            {showOptions && (
+              <div className="absolute flex flex-col space-y-2 bottom-full left-0 mb-2 bg-[#C9DABF] p-2 sm:p-3 rounded-xl shadow-lg">
+                <input type="file" accept="image/*" onChange={handleUpload} className="hidden" id="file-upload" />
+                <label
+                  htmlFor="file-upload"
+                  className="cursor-pointer p-2 bg-[#8FA880] text-white rounded-md hover:bg-[#7A9470] transition-colors duration-300 text-sm sm:text-base"
+                >
+                  <Upload className="h-4 w-4 inline-block mr-2" /> Upload
+                </label>
+                <button
+                  onClick={handleCapture}
+                  className="p-2 bg-[#5A7052] text-white rounded-md hover:bg-[#4B5945] transition-colors duration-300 text-sm sm:text-base"
+                >
+                  <Camera className="h-4 w-4 inline-block mr-2" /> Capture
+                </button>
+              </div>
             )}
+          </div>
+
+          <div className="flex-1 flex items-center">
+            <input
+              type="text"
+              placeholder={!isFollowUp ? "Describe your object..." : "Ask a follow-up question..."}
+              value={isFollowUp ? followUp : object}
+              onChange={(e) => (isFollowUp ? setFollowUp(e.target.value) : setObject(e.target.value))}
+              className="flex-1 p-2 sm:p-3 border rounded-l-xl sm:rounded-l-xl bg-[#E8F0E3] text-[#3A4A40] placeholder-[#8FA880] focus:outline-none focus:ring-2 focus:ring-[#5A7052] transition-all duration-300 text-sm sm:text-base"
+            />
+            <button
+              onClick={handleSend}
+              disabled={loading}
+              className=" sm:rounded-r-xl p-3 rounded-r-xl sm:p-4 bg-[#5A7052] text-white hover:bg-[#4B5945] transition-colors duration-300"
+            >
+              {loading ? (
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              ) : (
+                <PaperPlane className="h-4 w-4" />
+              )}
+            </button>
+          </div>
+
+          <select
+            value={style}
+            onChange={(e) => setStyle(e.target.value)}
+            className="p-2 sm:p-3 border rounded-xl bg-[#5A7052] text-white focus:outline-none focus:ring-2 focus:ring-[#8FA880] transition-all duration-300 text-sm sm:text-base"
+          >
+            <option value="versatile">Versatile</option>
+            <option value="minimalist">Minimalist</option>
+            <option value="boho">Boho</option>
+            <option value="modern">Modern</option>
+            <option value="rustic">Rustic</option>
+          </select>
+
+          <button
+            onClick={() => setIsFollowUp(!isFollowUp)}
+            className="p-2 sm:p-3 bg-[#5A7052] text-white rounded-xl hover:bg-[#4B5945] transition-colors duration-300 text-sm sm:text-base"
+          >
+            {isFollowUp ? "New Query" : "Follow-up"}
           </button>
-        </div>
 
-        <select
-          value={style}
-          onChange={(e) => setStyle(e.target.value)}
-          className="p-2 sm:p-3 border rounded-xl bg-[#5A7052] text-white focus:outline-none focus:ring-2 focus:ring-[#8FA880] transition-all duration-300 text-sm sm:text-base"
-        >
-          <option value="versatile">Versatile</option>
-          <option value="minimalist">Minimalist</option>
-          <option value="boho">Boho</option>
-          <option value="modern">Modern</option>
-          <option value="rustic">Rustic</option>
-        </select>
-
-        <button
-          onClick={() => setIsFollowUp(!isFollowUp)}
-          className="p-2 sm:p-3 bg-[#5A7052] text-white rounded-xl hover:bg-[#4B5945] transition-colors duration-300 text-sm sm:text-base"
-        >
-          {isFollowUp ? "New Query" : "Follow-up"}
-        </button>
-
-        
-      </footer>
-    </div>
+          
+        </footer>
+      </div>
   )
 }
 
