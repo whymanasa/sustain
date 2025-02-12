@@ -18,34 +18,34 @@ export async function POST(req: Request) {
 
     // ✅ If an image is uploaded, process it using BLIP-2
     if (image) {
-      const buffer = Buffer.from(await image.arrayBuffer());
+      try {
+        const bytes = await image.arrayBuffer();
+        const buffer = Buffer.from(bytes);
 
-      console.log("Sending image to Hugging Face BLIP-2...");
+        const visionResponse = await fetch(
+          "https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-base",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${process.env.HUGGINGIMAGE_API_KEY}`,
+              "Content-Type": "application/octet-stream",
+            },
+            body: buffer,
+          }
+        );
 
-      const visionResponse = await fetch(
-        "https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-base",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${process.env.HUGGINGIMAGE_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ image: buffer }), // Send raw image data
+        if (!visionResponse.ok) {
+          throw new Error(await visionResponse.text());
         }
-      );
 
-      if (!visionResponse.ok) {
-        const errorText = await visionResponse.text();
-        console.error("BLIP-2 API Error:", errorText);
-        return NextResponse.json({ message: "Error processing image", error: errorText }, { status: 500 });
+        const visionData = await visionResponse.json();
+        detectedObject = visionData[0]?.generated_text?.trim() || "unknown object";
+        console.log("BLIP-2 Detected Object:", detectedObject);
+      } catch (error) {
+        console.error("Image processing error:", error);
+        return NextResponse.json({ message: "Error processing image" }, { status: 500 });
       }
-
-      const visionData = await visionResponse.json();
-      detectedObject = visionData?.[0]?.generated_text?.trim() || "unknown object";
-      console.log("BLIP-2 Detected Object:", detectedObject);
     }
-
-
 
     console.log("Generated Prompt:", prompt);
 
@@ -77,10 +77,10 @@ export async function POST(req: Request) {
         2. **Upcycled Pencil Holder** – Decorate and use for storing pens or pencils.
         3. **Mini Herb Planter** – Fill with soil and grow fresh herbs on your windowsill.
         
-        ### Important:
-        do the following in one line:
-        - After presenting the three ideas, end with a **positive, motivating message** that encourages the user to get creative and keep exploring upcycling options. 
-        - Make the response feel **light, inspiring, and fun**—encourage the user to experiment with their own ideas and feel empowered to repurpose items creatively!`
+        ### Important :
+        
+        - After presenting the three ideas, end with a **positive, motivating message** that encourages the user to get creative and keep exploring upcycling options in 10-15 words. 
+        - Make the response feel **light, inspiring, and fun**—encourage the user to experiment with their own ideas and feel empowered to repurpose items creatively while including !`
         }
       ],
       provider: "hf-inference",
