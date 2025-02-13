@@ -15,16 +15,8 @@ const Trial: React.FC = () => {
   const [queries, setQueries] = useState<string[]>([])
   const [responses, setResponses] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
-  const [loadingQuote, setLoadingQuote] = useState("")
   const chatEndRef = useRef<HTMLDivElement>(null)
 
-  const loadingQuotes = [
-    "Let's leaf the waste behind!....loading",
-    "The planet and your wallet will thank you for being resourceful today....loading",
-    "Waste isn't waste until we waste it....loading",
-    "Make green choices <3....loading",
-    "Recycle it all no matter how small....loading",
-  ]
 
   useEffect(() => {
     const savedQueries = sessionStorage.getItem("chatQueries")
@@ -83,7 +75,6 @@ const Trial: React.FC = () => {
     if (!object.trim() && !file && !followUp.trim()) return
 
     setLoading(true)
-    setLoadingQuote(loadingQuotes[Math.floor(Math.random() * loadingQuotes.length)])
 
     const formData = new FormData()
     let userQuery = ""
@@ -124,6 +115,7 @@ const Trial: React.FC = () => {
     setFile(null)
     setPreview(null)
     setShowOptions(false)
+    setStyle("versatile")
   }
 
   const removeImage = () => {
@@ -159,8 +151,8 @@ const Trial: React.FC = () => {
       </main>
 
         {loading && (
-          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black text-white p-5 rounded-xl shadow-lg z-50 animate-fade-in-out">
-            {loadingQuote}
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black text-white p-5 rounded-xl shadow-lg z-50 animate-[beat_1s_ease-in-out_infinite]">
+            ฅ⁠^⁠•⁠ﻌ⁠•⁠^⁠ฅ One Hour Later......
           </div>
         )}
 
@@ -211,6 +203,11 @@ const Trial: React.FC = () => {
               placeholder={!isFollowUp ? "Describe your object..." : "Ask a follow-up question..."}
               value={isFollowUp ? followUp : object}
               onChange={(e) => (isFollowUp ? setFollowUp(e.target.value) : setObject(e.target.value))}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSend(); // Call handleSend when Enter is pressed
+                }
+              }}
               className="flex-1 p-2 sm:p-3 border rounded-l-xl sm:rounded-l-xl bg-[#E8F0E3] text-[#3A4A40] placeholder-[#8FA880] focus:outline-none focus:ring-2 focus:ring-[#5A7052] transition-all duration-300 text-sm sm:text-base"
             />
             <button

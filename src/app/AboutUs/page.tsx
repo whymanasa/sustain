@@ -20,7 +20,7 @@ function AboutUs() {
         This all started with my new year resolution of being more sustainable. Then i came up with this idea of 
         making this website with Sustainability and Upcycling at it's core XD. Before you throw out any object
         you might think is trash, try this website out and it might become a treasure, you will never know. Thank you for making it here 
-        and may your love for Sustainability grow stronger ❤️
+        . Let's leaf the waste behind!
       </p>
       <button 
         onClick={() => router.push('/trial')}

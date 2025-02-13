@@ -64,11 +64,18 @@ export async function POST(req: Request) {
         {
           role: "user",
           content:
-            followUp && previousQuery && previousResponse
-              ? `The user previously asked: "${previousQuery}"\nYou responded: "${previousResponse}"\nNow the user is asking a follow-up: "${followUp}"
-
-            Provide a helpful response that builds on the previous answer. Keep your answer **short and concise** (100-150 words), while staying within the context of **sustainable upcycling and reuse**. The response should remain **simple, beginner-friendly, and practical**, and add value by providing **easy, creative solutions** that can inspire the user to take action.`
-              : `Your task is to suggest **three simple, beginner-friendly, and eco-friendly ways** to repurpose an old ${detectedObject}. The ideas should be in a ${style} style while keeping sustainability at the core. 
+          followUp && previousQuery && previousResponse
+          ? `The user previously asked: "${previousQuery}"\nYou responded: "${previousResponse}"\nNow the user is asking a follow-up: "${followUp}"
+         ## Guidelines:
+        - Format your response in **Markdown**.
+        -If the follow-up is a **greeting** (e.g., "Hi", "Hello") or a **thank you message**, respond in a warm and friendly way keep it within (15-20 words). You can say something like :  
+        - You're welcome! I'm always here to help with creative upcycling ideas! 
+        - Hello! What would you like to upcycle today? 
+        - No problem! Let me know if you need more inspiration! 
+        
+        If the follow-up is **related to upcycling**, provide a helpful response that builds on the previous answer if required.  
+        Keep your answer **short and concise** (100-150 words), while staying within the context of **sustainable upcycling and reuse**. The response should remain **simple, beginner-friendly, and practical**, and if required add value by providing **easy, creative solutions** that can inspire the user to take action.`
+        : `Your task is to suggest **three simple, beginner-friendly, and eco-friendly ways** to repurpose an old ${detectedObject}. The ideas should be in a ${style} style while keeping sustainability at the core. 
         
         ## Guidelines:
         - **Keep the ideas simple** and creative, using minimal materials and easy-to-follow steps.
@@ -76,7 +83,7 @@ export async function POST(req: Request) {
         ## Guidelines:
         - Format your response in **Markdown**.
         - Use **bold titles** for each idea.
-        - Number each idea clearly (**1️⃣, 2️⃣, 3️⃣**).
+        - Number each idea clearly .
         - Provide a **short description** for each idea.
         - End with an **inspirational note** encouraging creativity.
         
@@ -94,7 +101,7 @@ export async function POST(req: Request) {
         },
       ],
       provider: "hf-inference",
-      max_tokens: 500,
+      max_tokens: 700,
     });
 
     const ideas = chatCompletion.choices[0].message.content;
