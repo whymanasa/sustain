@@ -10,9 +10,9 @@ export async function POST(req: Request) {
     const previousQuery = formData.get("previousQuery") as string | null;
     const previousResponse = formData.get("previousResponse") as string | null;
     const object = formData.get("object") as string | null;
-    const style = formData.get("style") as string || "versatile";
+    const style = (formData.get("style") as string) || "versatile";
     const image = formData.get("image") as Blob | null;
-    
+
     let detectedObject = object || ""; // If object text is provided, use it
     let prompt = "";
 
@@ -39,11 +39,15 @@ export async function POST(req: Request) {
         }
 
         const visionData = await visionResponse.json();
-        detectedObject = visionData[0]?.generated_text?.trim() || "unknown object";
+        detectedObject =
+          visionData[0]?.generated_text?.trim() || "unknown object";
         console.log("BLIP-2 Detected Object:", detectedObject);
       } catch (error) {
         console.error("Image processing error:", error);
-        return NextResponse.json({ message: "Error processing image" }, { status: 500 });
+        return NextResponse.json(
+          { message: "Error processing image" },
+          { status: 500 }
+        );
       }
     }
 
@@ -54,21 +58,27 @@ export async function POST(req: Request) {
       messages: [
         {
           role: "system",
-          content: "You are a top expert in sustainable upcycling and creative reuse."
+          content:
+            "You are a top expert in sustainable upcycling and creative reuse.",
         },
         {
           role: "user",
-          content: followUp && previousQuery && previousResponse
-            ?  `The user previously asked: "${previousQuery}"\nYou responded: "${previousResponse}"\nNow the user is asking a follow-up: "${followUp}"
+          content:
+            followUp && previousQuery && previousResponse
+              ? `The user previously asked: "${previousQuery}"\nYou responded: "${previousResponse}"\nNow the user is asking a follow-up: "${followUp}"
 
             Provide a helpful response that builds on the previous answer. Keep your answer **short and concise** (100-150 words), while staying within the context of **sustainable upcycling and reuse**. The response should remain **simple, beginner-friendly, and practical**, and add value by providing **easy, creative solutions** that can inspire the user to take action.`
-            : `Your task is to suggest **three simple, beginner-friendly, and eco-friendly ways** to repurpose an old ${detectedObject}. The ideas should be in a ${style} style while keeping sustainability at the core. 
+              : `Your task is to suggest **three simple, beginner-friendly, and eco-friendly ways** to repurpose an old ${detectedObject}. The ideas should be in a ${style} style while keeping sustainability at the core. 
         
         ## Guidelines:
         - **Keep the ideas simple** and creative, using minimal materials and easy-to-follow steps.
         - Each idea should include:
-          1. A **catchy title** that's engaging.
-          2. A **short description** that explains how to repurpose the item.
+        ## Guidelines:
+        - Format your response in **Markdown**.
+        - Use **bold titles** for each idea.
+        - Number each idea clearly (**1️⃣, 2️⃣, 3️⃣**).
+        - Provide a **short description** for each idea.
+        - End with an **inspirational note** encouraging creativity.
         
         - Avoid complex DIY techniques—focus on **easy, creative solutions** that anyone can make.
           
@@ -80,8 +90,8 @@ export async function POST(req: Request) {
         ### Important :
         
         - After presenting the three ideas, end with a **positive, motivating message** that encourages the user to get creative and keep exploring upcycling options in 10-15 words. 
-        - Make the response feel **light, inspiring, and fun**—encourage the user to experiment with their own ideas and feel empowered to repurpose items creatively while including !`
-        }
+        - Make the response feel **light, inspiring, and fun**—encourage the user to experiment with their own ideas and feel empowered to repurpose items creatively while including !`,
+        },
       ],
       provider: "hf-inference",
       max_tokens: 500,
@@ -90,6 +100,12 @@ export async function POST(req: Request) {
     const ideas = chatCompletion.choices[0].message.content;
     return NextResponse.json({ detectedObject, ideas });
   } catch (error) {
-    return NextResponse.json({ message: "Server error", error: error instanceof Error ? error.message : "Unknown error" }, { status: 500 });
+    return NextResponse.json(
+      {
+        message: "Server error",
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    );
   }
 }

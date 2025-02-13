@@ -1,6 +1,8 @@
 "use client"
 import React, { useState, useEffect , useRef } from "react"
 import { FaCamera as Camera, FaPaperPlane as PaperPlane, FaUpload as Upload ,FaTimes as X} from "react-icons/fa"
+import ReactMarkdown from "react-markdown"
+
 
 const Trial: React.FC = () => {
   const [showOptions, setShowOptions] = useState(false)
@@ -17,11 +19,11 @@ const Trial: React.FC = () => {
   const chatEndRef = useRef<HTMLDivElement>(null)
 
   const loadingQuotes = [
-    "Let's leaf the waste behind!",
-    "The planet and your wallet will thank you for being resourceful today",
-    "Waste isn't waste until we waste it",
-    "Make green choices",
-    "Recycle it all no matter how small",
+    "Let's leaf the waste behind!....loading",
+    "The planet and your wallet will thank you for being resourceful today....loading",
+    "Waste isn't waste until we waste it....loading",
+    "Make green choices <3....loading",
+    "Recycle it all no matter how small....loading",
   ]
 
   useEffect(() => {
@@ -132,7 +134,7 @@ const Trial: React.FC = () => {
   return (
     <div className="flex flex-col h-screen bg-[#E8F0E3] text-[#3A4A40]">
       <header className="bg-[#5A7052] text-[#FFFFFF] text-xl font-bold p-4 sm:p-6 text-center shadow-lg rounded-b-2xl">
-        Neko - The AI
+        Neko - The Sustainable Upcycling AI
       </header>
 
       <main className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6 bg-[#C9DABF] rounded-2xl shadow-inner m-2 sm:m-4">
@@ -144,19 +146,20 @@ const Trial: React.FC = () => {
             </div>
             {responses[index] && (
               <div className="text-left bg-[#5A7052] text-[#FFFFFF] p-3 sm:p-4 rounded-2xl max-w-[80%] sm:max-w-xl mr-auto shadow-md transition-all duration-300 hover:shadow-lg">
-                <strong className="block mb-1 text-[#E8F0E3]">/⁠ᐠ⁠｡⁠ꞈ⁠｡⁠ᐟ⁠\</strong> {responses[index]}
+                <strong className="block mb-1 text-[#E8F0E3]">/⁠ᐠ⁠｡⁠ꞈ⁠｡⁠ᐟ⁠\</strong>
+                <ReactMarkdown>{responses[index]}</ReactMarkdown>
               </div>
             )}
           </div>
         ))}
         {queries.length === 0 && (
-          <p className="text-[#5A7052] text-center text-lg italic">/⁠ᐠ⁠｡⁠ꞈ⁠｡⁠ᐟ⁠\ No messages yet. Start a conversation!</p>
+          <p className="text-[#5A7052] text-center text-lg italic">/⁠ᐠ⁠｡⁠ꞈ⁠｡⁠ᐟ⁠\ Here's to a greener, more sustainable future! 🌿✨</p>
         )}
         <div ref={chatEndRef} />
       </main>
 
         {loading && (
-          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#B08BBB] text-white p-4 rounded-xl shadow-lg z-50 animate-fade-in-out">
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black text-white p-5 rounded-xl shadow-lg z-50 animate-fade-in-out">
             {loadingQuote}
           </div>
         )}
@@ -213,7 +216,7 @@ const Trial: React.FC = () => {
             <button
               onClick={handleSend}
               disabled={loading}
-              className=" sm:rounded-r-xl p-3 rounded-r-xl sm:p-4 bg-[#5A7052] text-white hover:bg-[#4B5945] transition-colors duration-300"
+              className=" sm:rounded-r-xl p-3 rounded-r-xl sm:p-[17.5px] bg-[#5A7052] text-white hover:bg-[#4B5945] transition-colors duration-300"
             >
               {loading ? (
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />

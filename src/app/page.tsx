@@ -21,12 +21,13 @@ export default function Home() {
         onClick={() => router.push('/trial')}
         className="px-8 py-2 bg-[#565454] text-white rounded-lg hover:bg-black transition-colors duration-200"
       >
-        Try It
+        Try - It
       </button>
       <button 
+      onClick={() => router.push('/AboutUs')}
         className="px-6 py-2 bg-[#565454] text-white rounded-lg hover:bg-black transition-colors duration-200"
       >
-        SignUp
+        AboutUs
       </button>
     </div>
   );
