@@ -2,6 +2,7 @@
 import React, { useState, useEffect , useRef } from "react"
 import { FaCamera as Camera, FaPaperPlane as PaperPlane, FaUpload as Upload ,FaTimes as X} from "react-icons/fa"
 import ReactMarkdown from "react-markdown"
+import Image from "next/image"
 
 
 const Trial: React.FC = () => {
@@ -145,7 +146,7 @@ const Trial: React.FC = () => {
           </div>
         ))}
         {queries.length === 0 && (
-          <p className="text-[#5A7052] text-center text-lg italic">/⁠ᐠ⁠｡⁠ꞈ⁠｡⁠ᐟ⁠\ Here's to a greener, more sustainable future! 🌿✨</p>
+          <p className="text-[#5A7052] text-center text-lg italic">/⁠ᐠ⁠｡⁠ꞈ⁠｡⁠ᐟ⁠\ Here&apos;s to a greener, more sustainable future! 🌿✨</p>
         )}
         <div ref={chatEndRef} />
       </main>
@@ -158,9 +159,11 @@ const Trial: React.FC = () => {
 
         {preview && (
           <div className="flex justify-center items-center p-2 sm:p-4">
-            <img
+            <Image
               src={preview || "/placeholder.svg"}
               alt="Uploaded Preview"
+              width={400}
+              height={300}
               className="max-w-[80%] sm:max-w-xs max-h-20 rounded-2xl shadow-md"
             />
             <button className="ml-2 p-1 bg-[#5A7052] text-white rounded-full" onClick={removeImage}>

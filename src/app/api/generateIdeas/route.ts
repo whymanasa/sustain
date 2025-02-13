@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     const image = formData.get("image") as Blob | null;
 
     let detectedObject = object || ""; // If object text is provided, use it
-    let prompt = "";
+    const prompt = "Your prompt here"; // Example
 
     // ✅ If an image is uploaded, process it using BLIP-2
     if (image) {

@@ -16,11 +16,11 @@ function AboutUs() {
         height={300}
         className="rounded-2xl shadow-lg"
       />
-      <p className="max-w-6xl  text-lg leading-relaxed">
-        This all started with my new year resolution of being more sustainable. Then i came up with this idea of 
-        making this website with Sustainability and Upcycling at it's core XD. Before you throw out any object
+      <p className="max-w-2xl text-center text-lg leading-relaxed">
+        This all started with my new year resolution of being more sustainable. Then I came up with this idea of 
+        making this website with Sustainability and Upcycling at its core. Before you throw out any object
         you might think is trash, try this website out and it might become a treasure, you will never know. Thank you for making it here 
-        . Let's leaf the waste behind!
+        and may your love for Sustainability grow stronger &nbsp;❤️
       </p>
       <button 
         onClick={() => router.push('/trial')}
